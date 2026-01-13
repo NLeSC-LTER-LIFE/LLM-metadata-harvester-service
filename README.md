@@ -1,5 +1,5 @@
 # Badges
-
+<!---
 | fair-software.nl recommendations | Example Badges |
 |:-|:-:|
 | [1. Code Repository](https://fair-software.nl/recommendations/repository)       | [![GitHub URL](https://img.shields.io/badge/github-repo-000.svg?logo=github&labelColor=gray&color=blue)](https://github.com/xenon-middleware/xenon-cli) |
@@ -25,9 +25,9 @@
 | Documentation                                                                   | [![ReadTheDocs](https://readthedocs.org/projects/xenon-tutorial/badge/?version=latest)](https://xenon-tutorial.readthedocs.io/en/latest/?badge=latest) |
 
 _(Customize these badges with your own links. Check https://shields.io/ to see which badges are available.)_
-
+--->
 # Welcome
-
+<!---
 The repository
 [https://github.com/NLeSC/template](https://github.com/NLeSC/template) contains
 the template for software projects at the Netherlands eScience Center. In
@@ -48,17 +48,17 @@ delete
 - the corresponding issue templates from
 [/.github/ISSUE_TEMPLATE](/.github/ISSUE_TEMPLATE)
 - the Welcome section in this README.md
-
+--->
 # Documentation for users
-
+<!---
 - _description of what the software does_
 - _notes on how to install_
-
+--->
 # Documentation for developers
-
+<!---
 - _notes on how to contribute_
-
+--->
 # Documentation for maintainers
-
+<!---
 - _notes on how to make a release_
-
+--->
