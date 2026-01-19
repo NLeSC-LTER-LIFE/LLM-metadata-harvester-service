@@ -1,0 +1,53 @@
+Bootstrap: docker
+From: python:3.12-slim
+
+%labels
+    Author MeiertGrootes
+    Project LterLife-llm-metadata-harvester-proto
+
+%environment
+    export PYTHONUNBUFFERED=1
+    export PLAYWRIGHT_BROWSERS_PATH=/opt/playwright-browsers
+    export HOME=/tmp
+
+%post
+    set -e
+
+    # Ensure predictable HOME during build
+    export HOME=/tmp
+    export PLAYWRIGHT_BROWSERS_PATH=/opt/playwright-browsers
+
+    apt-get update && apt-get install -y \
+        git \
+        ca-certificates \
+        fonts-liberation \
+        && rm -rf /var/lib/apt/lists/*
+
+    mkdir -p /opt /tmp /opt/playwright-browsers
+
+    # Install Python dependencies
+    pip install --no-cache-dir "llm-metadata-harvester[scrape]"
+
+    # Install Playwright system deps + browsers
+    playwright install-deps
+    playwright install chromium chromium-headless-shell
+
+    # Make everything readable by non-root users
+    chmod -R a+rX /opt /usr/local
+
+%files
+    entrypoint.py /opt/entrypoint.py
+
+
+%runscript
+    # Load bundled args if provided
+    if [ -n "${ENTRYPOINT_ARGS}" ]; then
+        IFS=$'\n' read -r -d '' -a BUNDLED_ARGS <<< "${ENTRYPOINT_ARGS}"$'\0'
+    else
+        BUNDLED_ARGS=()
+    fi
+
+    exec python /opt/entrypoint.py "${BUNDLED_ARGS[@]}" "$@"
+
+
+
