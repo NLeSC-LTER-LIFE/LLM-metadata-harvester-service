@@ -42,12 +42,11 @@ From: python:3.12-slim
 %runscript
     # Load bundled args if provided
     if [ -n "${ENTRYPOINT_ARGS}" ]; then
-        IFS=$'\n' read -r -d '' -a BUNDLED_ARGS <<< "${ENTRYPOINT_ARGS}"$'\0'
+        exec python /opt/entrypoint.py "$ENTRYPOINT_ARGS" "$@"
     else
-        BUNDLED_ARGS=()
+        exec python /opt/entrypoint.py "$@"
     fi
 
-    exec python /opt/entrypoint.py "${BUNDLED_ARGS[@]}" "$@"
 
 
 

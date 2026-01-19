@@ -14,7 +14,7 @@ def run_apptainer(model: str, api_key: str, input_text: str):
     ]
 
     env = {}
-    env["APPTAINERENV_ENTRYPOINT_ARGS"] = "\n".join(args)
+    env["APPTAINERENV_ENTRYPOINT_ARGS"] = " ".join(args)
 
     cmd = [
         "apptainer", "run",
