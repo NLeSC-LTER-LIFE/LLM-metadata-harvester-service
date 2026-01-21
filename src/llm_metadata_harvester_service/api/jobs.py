@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 from celery.result import AsyncResult
-from llm-metadata-harvester-service.api.schemas import JobRequest, JobStatusResponse
-from llm-metadata-harvester-service.workers.tasks import run_harvester_task
-from llm-metadat-harvester-service.core.celery_app import celery_app
+from llm_metadata_harvester_service.api.schemas import JobRequest, JobStatusResponse
+from llm_metadata_harvester_service.workers.tasks import run_harvester_task
+from llm_metadata_harvester_service.core.celery_app import celery_app
 
 router = APIRouter()
 
