@@ -11,6 +11,12 @@ celery_app = Celery(
     backend=result_backend,
 )
 
+celery_app.autodiscover_tasks(
+    [
+        "llm_metadata_harvester_service.workers",
+    ]
+)
+
 celery_app.conf.update(
     task_serializer="json",
     accept_content=["json"],
