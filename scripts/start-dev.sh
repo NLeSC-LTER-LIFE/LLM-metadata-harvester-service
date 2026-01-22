@@ -2,10 +2,10 @@
 set -e
 
 echo "▶ Activating virtualenv"
-source ../envs/llm/bin/activate
+source envs/llm/bin/activate
 
 echo "▶ setting environment"
-source ../.env
+source .env
 #export CELERY_BROKER_URL=redis://localhost:6379/0
 #export CELERY_RESULT_BACKEND=redis://localhost:6379/1
 
