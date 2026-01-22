@@ -6,7 +6,7 @@ result_backend = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/1")
 
 
 celery_app = Celery(
-    "worker",
+    "llm_metadata_harvester_service",
     broker=broker_url,
     backend=result_backend,
 )

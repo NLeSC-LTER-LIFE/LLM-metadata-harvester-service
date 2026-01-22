@@ -11,7 +11,7 @@ async def submit_job(req: JobRequest):
     task = run_harvester_task.delay(
         model=req.model,
         api_key=req.api_key.get_secret_value(),
-        input_text=req.input_text,
+        url=req.url,
     )
     return JobStatusResponse(job_id=task.id, status="queued")
 
@@ -19,19 +19,38 @@ async def submit_job(req: JobRequest):
 async def get_job_status(job_id: str):
     result = AsyncResult(job_id, app=celery_app)
 
-    response = {
-        "job_id": job_id,
-        "status": result.state,
-        "result": None,
-        "error": None,
-    }
+    if result.state =="PENDING":
+        return JobStatusResponse(job_id=job_id, status="pending")
+    
+    if result.state == "FAILURE":
+        return JobStatusResponse(
+            job_id=job_id,
+            status="failed",
+            error=str(result.result),
+        )
 
-    if result.successful():
-        response["result"] = result.result
-    elif result.failed():
-        response["error"] = str(result.result)
+    if result.state == "SUCCESS":
+        return JobStatusResponse(
+            job_id=job_id,
+            status="success",
+            error=str(result.result),
+        )
 
-    return response
+    #response = {
+    #    "job_id": job_id,
+    #    "status": result.state,
+    #    "result": None,
+    #    "error": None,
+    #}
+
+    #if result.successful():
+    #    response["result"] = result.result
+    #elif result.failed():
+    #    response["error"] = str(result.result)
+
+    #return response
+
+    return JobStatusResponse(job_id=job_id, status=result.state)
 
 @router.get("/{job_id}/result")
 async def get_job_result(job_id: str):
