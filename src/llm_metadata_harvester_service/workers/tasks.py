@@ -13,6 +13,11 @@ def run_harvester_task(self, model: str, api_key: str, url: str):
         url=url,
     )
 
+    if not result.ok:
+        raise RuntimeError(
+            f"Apptainer failed (rc={result.returncode})\n{result.stderr}"
+        )
+
     if result.timed_out:
         raise RuntimeError(result.stderr or 'Apptainer execution failed')
     

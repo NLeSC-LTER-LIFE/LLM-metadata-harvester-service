@@ -14,6 +14,10 @@ class ApptainerResult:
     stderr: str
     timed_out: bool = False
 
+    @property
+    def ok(self) -> bool:
+        return self.returncode == 0
+
 def run_apptainer(
         model: str, 
         api_key: str, 
@@ -52,8 +56,8 @@ def run_apptainer(
 
         return ApptainerResult(
             returncode=result.returncode,
-            stdout=result.stdout.strip(),
-            stderr=result.stderr.strip(),
+            stdout=result.stdout,
+            stderr=result.stderr,
         )
     
     except subprocess.TimeoutExpired as e:
