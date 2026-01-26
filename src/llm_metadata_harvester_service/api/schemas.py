@@ -6,6 +6,15 @@ class JobRequest(BaseModel):
     api_key: SecretStr
     url: str
 
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "model": "gemini-2.5-flash",
+                "api_key": "sk-...",
+                "url": "https://example.com"
+            }
+        }    
+
 
 class JobStatusResponse(BaseModel):
     job_id: str
