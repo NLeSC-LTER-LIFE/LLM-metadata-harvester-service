@@ -2,7 +2,7 @@ from pydantic import BaseModel, SecretStr
 from typing import Optional, Any
 
 class JobRequest(BaseModel):
-    job_id: str
+    model: str
     api_key: SecretStr
     url: str
 
