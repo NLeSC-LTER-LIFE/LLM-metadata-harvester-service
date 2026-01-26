@@ -17,13 +17,13 @@ class ApptainerResult:
 def run_apptainer(
         model: str, 
         api_key: str, 
-        input_text: str, 
+        url: str, 
         timeout: int=600
 ) -> ApptainerResult:
 
     args = [
-        "--api-key", api-key,
-        "--model-name", model_name,
+        "--api-key", api_key,
+        "--model-name", model,
         "--url", url,
     ]
 
