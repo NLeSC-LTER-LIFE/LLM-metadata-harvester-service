@@ -1,11 +1,25 @@
 import subprocess
+from dataclasses import dataclass
+from typing import Optional
 import tempfile
 import json
 import os
 
 METADATA_HARVESTER_IMAGE = "/opt/containers/llm-metadata-harvester-service.sif"
 
-def run_apptainer(model: str, api_key: str, input_text: str):
+@dataclass
+class ApptainerResult:
+    returncode: int
+    stdout: str
+    stderr: str
+    timed_out: bool = False
+
+def run_apptainer(
+        model: str, 
+        api_key: str, 
+        input_text: str, 
+        timeout: int=600
+) -> ApptainerResult:
 
     args = [
         "--api-key", api-key,
@@ -17,7 +31,8 @@ def run_apptainer(model: str, api_key: str, input_text: str):
     env["APPTAINERENV_ENTRYPOINT_ARGS"] = " ".join(args)
 
     cmd = [
-        "apptainer", "run",
+        "apptainer", 
+        "run",
         "--cleanenv",
         "--containall",
         "--no-home",
@@ -25,13 +40,27 @@ def run_apptainer(model: str, api_key: str, input_text: str):
         
     ]
 
-    result = subprocess.run(
-        cmd,
-        env=env,
-        capture_output=True,
-        text=True,
-        check=True,
-    )
+    try:
+        result = subprocess.run(
+            cmd,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=timeout,
+        )
 
-    return result.stdout
+        return ApptainerResult(
+            returncode=result.returncode,
+            stdout=result.stdout.strip(),
+            stderr=result.stderr.strip(),
+        )
+    
+    except subprocess.TimeoutExpired as e:
+        return ApptainerResult(
+            returncode=-1,
+            stdout=e.stdout or "",
+            stderr="Execution timed out",
+            timed_out=True,
+        )
 
