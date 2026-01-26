@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 from typing import Optional, Any
 
 class JobRequest(BaseModel):

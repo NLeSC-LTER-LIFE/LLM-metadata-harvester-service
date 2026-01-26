@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from llm-metadata-harvester-service.api.jobs import router as jobs_router
+from llm_metadata_harvester_service.api.jobs import router as jobs_router
 
 app = FastAPI(title="LLM metadata harvester Service")
 
