@@ -50,7 +50,6 @@ def run_apptainer(
             env=env,
             capture_output=True,
             text=True,
-            check=True,
             timeout=timeout,
         )
 
