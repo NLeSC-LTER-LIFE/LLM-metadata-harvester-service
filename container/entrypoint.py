@@ -9,6 +9,10 @@ python3 entrypoint.py \
 import argparse
 import os
 import asyncio
+import json
+import sys
+import contextlib
+import io
 from llm_metadata_harvester.harvester_operations import metadata_harvest
 from llm_metadata_harvester.standards import LTER_LIFE_STANDARD
 
@@ -35,18 +39,24 @@ def string_to_bool(s):
 # settings in metadat_harvest. TODO fix metadata harvest
 async def main(args):
     os.environ['GEMINI_API_KEY'] = args.api_key
-    print(args.api_key)
-    print('---')
-    #print(os.environ['LLM_API_KEY'])
-    print('---')
-    extracted_metadata = await metadata_harvest(
-        model_name=args.model_name,
-        url=args.url,
-        metadata_standard=LTER_LIFE_STANDARD,
-        dump_format=args.dump_format,
-        allow_retrying=string_to_bool(args.allow_retrying),
-    )
-    print(extracted_metadata)
+    #os.environ['LLM_API_KEY']
+    noisy_stdout = io.StringIO()
+    with contextlib.redirect_stdout(noisy_stdout):
+        extracted_metadata = await metadata_harvest(
+            model_name=args.model_name,
+            url=args.url,
+            metadata_standard=LTER_LIFE_STANDARD,
+            dump_format=args.dump_format,
+            allow_retrying=string_to_bool(args.allow_retrying),
+        )
+    # Send captured prints to stderr
+    stderr_output = noisy_stdout.getvalue()
+    if stderr_output:
+        print(stderr_output, file=sys.stderr, end="")
+    print(json.dumps({
+        "schema_version":1,
+        "metadata":extracted_metadata,
+    }))
 
 if __name__ == "__main__":
     args = parse_args()

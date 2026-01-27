@@ -3,6 +3,7 @@ from llm_metadata_harvester_service.services.apptainer import run_apptainer, App
 from celery import shared_task
 from typing import Optional
 import subprocess
+import json
 
 @celery_app.task(bind=True)
 def run_harvester_task(self, model: str, api_key: str, url: str):
@@ -21,11 +22,28 @@ def run_harvester_task(self, model: str, api_key: str, url: str):
     if result.timed_out:
         raise RuntimeError(result.stderr or 'Apptainer execution failed')
     
+    # Parse structured JSON from stdout
+    try:
+        parsed = json.loads(result.stdout)
+    except json.JSONDecodeError as e:
+        raise RuntimeError(
+            "Container did not emit valid JSON on stdout"
+        ) from e
+    
+    # Return normalized, API-ready object
     return {
-        "stdout": result.stdout,
+        "model": model,
+        "source_url": url,
+        "metadata": parsed,
+        "returncode": result.returncode,
         "stderr": result.stderr,
-        "returncode": result.returncode
     }
+    
+    #return {
+    #    "stdout": result.stdout,
+    #    "stderr": result.stderr,
+    #    "returncode": result.returncode
+    #}
 
 @shared_task(bind=True)
 def apptainer_smoke_test(self):

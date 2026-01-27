@@ -33,7 +33,7 @@ async def get_job_status(job_id: str):
         return JobStatusResponse(
             job_id=job_id,
             status="success",
-            error=str(result.result),
+            result=result.result,
         )
 
     #response = {
