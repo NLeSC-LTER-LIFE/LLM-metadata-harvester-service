@@ -4,8 +4,8 @@ set -e
 PID_DIR=".run"
 mkdir -p "$PID_DIR"
 
-echo " Activating virtualenv"
-source envs/llm/bin/activate
+#echo " Activating virtualenv"
+#source envs/llm/bin/activate
 
 echo " setting environment"
 source .env
