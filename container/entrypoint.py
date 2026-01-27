@@ -15,12 +15,17 @@ from llm_metadata_harvester.standards import LTER_LIFE_STANDARD
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Metadata Harvester Demo")
-    parser.add_argument('--api-key', required=True, help='API key for LLM access')
-    parser.add_argument('--model-name', required=True, help='Model name to use')
-    parser.add_argument('--url', required=True, help='URL to harvest metadata from')
+    parser.add_argument('--api-key', default=os.getenv("API_KEY"), help='API key for LLM access')
+    parser.add_argument('--model-name', default=os.getenv("MODEL_NAME"), help='Model name to use')
+    parser.add_argument('--url', default=os.getenv("URL"), help='URL to harvest metadata from')
     parser.add_argument('--dump-format', default='none', choices=['none', 'json', 'yaml'], help='Output format')
     parser.add_argument('--allow_retrying', default='False', choices=['True','False'], help='Allow retrying on failure')
-    return parser.parse_args()
+    args = parser.parse_args()
+    missing = [k for k, v in vars(args).items() if not v]
+    if missing:
+        parser.error(f"Missing required arguments: {', '.join(missing)}")
+    else:
+        return args
 
 def string_to_bool(s):
     return s.lower() == 'true'

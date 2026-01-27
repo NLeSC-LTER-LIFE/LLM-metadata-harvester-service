@@ -31,15 +31,18 @@ def run_apptainer(
     import llm_metadata_harvester_service.services.apptainer as a
     print(a.__file__) 
 
-    args = [
-        "--api-key", api_key,
-        "--model-name", model,
-        "--url", url,
-    ]
+    #args = [
+    #    "--api-key", api_key,
+    #    "--model-name", model,
+    #    "--url", url,
+    #]
 
-    #env = {}
-    env = os.environ.copy()
-    env["APPTAINERENV_ENTRYPOINT_ARGS"] = " ".join(args)
+    env = {}
+    #env = os.environ.copy()
+    env["APPTAINERENV_API_KEY"] = api_key
+    env["APPTAINERENV_MODEL_NAME"] = model
+    env["APPTAINERENV_URL"] = url
+    #env["APPTAINERENV_ENTRYPOINT_ARGS"] = " ".join(args)
     print(env)
 
     cmd = [
@@ -49,6 +52,7 @@ def run_apptainer(
         "--containall",
         "--no-home",
         METADATA_HARVESTER_IMAGE,
+        
         
     ]
 
