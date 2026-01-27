@@ -27,7 +27,9 @@ def run_apptainer(
 ) -> ApptainerResult:
 
     print("RUNN_APPTAINER FROM:", inspect.getfile(run_apptainer))
-    print("CHECK_TRUE_PRESENT:", "check=True" in inspect.getsource(run_apptainer)) 
+    print("CHECK_TRUE_PRESENT:", "check=True" in inspect.getsource(run_apptainer))
+    import llm_metadata_harvester_service.services.apptainer as a
+    print(a.__file__) 
 
     args = [
         "--api-key", api_key,
