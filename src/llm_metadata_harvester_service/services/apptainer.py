@@ -40,6 +40,7 @@ def run_apptainer(
     #env = {}
     env = os.environ.copy()
     env["APPTAINERENV_ENTRYPOINT_ARGS"] = " ".join(args)
+    print(env)
 
     cmd = [
         "apptainer", 
