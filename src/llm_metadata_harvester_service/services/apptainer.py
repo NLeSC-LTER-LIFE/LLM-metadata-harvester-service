@@ -35,7 +35,8 @@ def run_apptainer(
         "--url", url,
     ]
 
-    env = {}
+    #env = {}
+    env = os.environ.copy()
     env["APPTAINERENV_ENTRYPOINT_ARGS"] = " ".join(args)
 
     cmd = [
