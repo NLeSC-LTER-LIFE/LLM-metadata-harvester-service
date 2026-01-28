@@ -118,8 +118,10 @@ which returns
 3. Pure result can be queried as
    ```
    curl -s http://localhost:8000/jobs/$JOB_ID
-  ```
+   ```
+   
   and provides a (nested) JSON return as
+  
   ```
 {"status":"SUCCESS","result":{"model":"gemini-2.5-flash","source_url":"https://stac.ecodatacube.eu/veg_quercus.robur_anv.eml/collection.json?.language=en","metadata":{"schema_version":1,"metadata":{"Metadata date":"2000-01-01 to 2020-12-31;","Metadata language":"English;","Responsible organization metadata":"Opengeohub;","Landing page":"https://doi.org/10.5281/zenodo.5887415;","Title":"Actual probability distribution for Quercus robur (2000–2020) in EcoDataCube;","Description":"Actual Natural Vegetation (ANV): probability of occurrence for the Pedunculate oak in its realized environment for the period 2000 - 2033;","Unique Identifier":"https://doi.org/10.5281/zenodo.5887415;","Resource type":"Species Distribution Model (veg_quercus.robur_anv);","Keywords":"Species distribution model, Tree species, Landsat;","Data creator":"Carmelo Bonannella;","Data contact point":"carmelo.bonannella@opengeohub.org;","Data publisher":"Opengeohub;","Spatial coverage":"Implicitly global or unspecified;","Spatial resolution":"N/A;","Spatial reference system":"N/A;","Temporal coverage":"2000-01-01 00:00:00 UTC – 2020-12-31 00:00:00 UTC;","Temporal resolution":"Variable (e.g., 2-4 year intervals for COG files);","License":"CC-BY-SA-4.0;","Access rights":"Openly accessible;","Distribution access URL":"N/A;","Distribution format":"COG (Cloud Optimized GeoTIFF);","Distribution byte size":"N/A;"}},"returncode":0,"stderr":"Extracting full page text...\nExtracting entities from text...\nConverting extracted nodes to metadata...\n"}}
   ```
