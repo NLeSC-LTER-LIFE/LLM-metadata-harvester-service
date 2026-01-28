@@ -27,6 +27,11 @@
 _(Customize these badges with your own links. Check https://shields.io/ to see which badges are available.)_
 --->
 # Welcome
+This repository provides the framework to making LTER-LIFE's LLM based metadata harvester available as a service.
+
+User are expected to provide the name of a supported large language model (currrently these are those offered by OpenAI and Google Gemini), an associated API key, and the url of the metadata to be harvested.
+
+Installation and detals of use are provided below 
 <!---
 The repository
 [https://github.com/NLeSC/template](https://github.com/NLeSC/template) contains
@@ -50,6 +55,75 @@ delete
 - the Welcome section in this README.md
 --->
 # Documentation for users
+
+## Installation
+
+To run the service users should ensure apptainer is available on their system and
+
+1. Clone this repository
+   
+   ```bash
+   git clone https://github.com/NLeSC-LTER-LIFE/LLM-metadata-harvester-service.git 
+   cd LLM-metadata-harvester-service
+   ```
+
+2. create and activate a virtual environment (e.g. named llm)
+   ```
+    python -m venv ./venv/llm python=3.11
+    source ./venv/llm/bin/activate    
+   ```
+
+3. Install the service
+   ```
+   pip install -e .
+   ```
+
+4. Build the llm_metadata_harvester container
+   ```
+   cd container
+   apptainer build llm_metadata_harvester_service.sif llm_metadata_harvester_service.sif
+   ```
+   and place it at `/opt/contianers/llm_metadata_harvester_service.sif`
+   creating the directory if needed.
+
+5. The service can the be started from the root directory of the repository
+   ```
+   bash scripts/start-dev.sh
+   ```
+   and shut down with
+   ```
+   bash scripts/stop-dev.sh
+
+ ## Usage
+
+ Having installed and started the service, it can be queried via its REST API:
+
+ 1. Submitting a request can be done as
+```
+curl -i -X POST http://localhost:8000/jobs/   -H "Content-Type: application/json"   -d '{
+    "model": "gemini-2.5-flash",
+    "api_key": "UserAPIkeyForModelMustBeSuppliedHere",
+    "url": "https://stac.ecodatacube.eu/veg_quercus.robur_anv.eml/collection.json?.language=en"
+  }'
+```
+which returns
+```
+{"job_id":"07035c72-a66a-4b49-9196-8109590236d1","status":"queued","result":null,"error":null}
+```
+
+2. Job status can be queried using the returned `job_id`
+  ```
+   curl -s http://localhost:8000/jobs/$JOB_ID
+  ```
+3. Pure result can be queried as
+   ```
+   curl -s http://localhost:8000/jobs/$JOB_ID
+  ```
+  and provides a (nested) JSON return as
+  ```
+{"status":"SUCCESS","result":{"model":"gemini-2.5-flash","source_url":"https://stac.ecodatacube.eu/veg_quercus.robur_anv.eml/collection.json?.language=en","metadata":{"schema_version":1,"metadata":{"Metadata date":"2000-01-01 to 2020-12-31;","Metadata language":"English;","Responsible organization metadata":"Opengeohub;","Landing page":"https://doi.org/10.5281/zenodo.5887415;","Title":"Actual probability distribution for Quercus robur (2000–2020) in EcoDataCube;","Description":"Actual Natural Vegetation (ANV): probability of occurrence for the Pedunculate oak in its realized environment for the period 2000 - 2033;","Unique Identifier":"https://doi.org/10.5281/zenodo.5887415;","Resource type":"Species Distribution Model (veg_quercus.robur_anv);","Keywords":"Species distribution model, Tree species, Landsat;","Data creator":"Carmelo Bonannella;","Data contact point":"carmelo.bonannella@opengeohub.org;","Data publisher":"Opengeohub;","Spatial coverage":"Implicitly global or unspecified;","Spatial resolution":"N/A;","Spatial reference system":"N/A;","Temporal coverage":"2000-01-01 00:00:00 UTC – 2020-12-31 00:00:00 UTC;","Temporal resolution":"Variable (e.g., 2-4 year intervals for COG files);","License":"CC-BY-SA-4.0;","Access rights":"Openly accessible;","Distribution access URL":"N/A;","Distribution format":"COG (Cloud Optimized GeoTIFF);","Distribution byte size":"N/A;"}},"returncode":0,"stderr":"Extracting full page text...\nExtracting entities from text...\nConverting extracted nodes to metadata...\n"}}
+  ```
+
 <!---
 - _description of what the software does_
 - _notes on how to install_
