@@ -3,14 +3,12 @@ from typing import Optional, Any
 
 class JobRequest(BaseModel):
     model: str
-    api_key: SecretStr
     url: str
 
     class Config:
         json_schema_extra = {
             "example": {
                 "model": "gemini-2.5-flash",
-                "api_key": "sk-...",
                 "url": "https://example.com"
             }
         }    
