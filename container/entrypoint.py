@@ -34,17 +34,15 @@ def parse_args():
 def string_to_bool(s):
     return s.lower() == 'true'
 
-#NOTE THIS HARDCODES the use of a gemini model and the gemini api key 
-# however the generic LLM_API_KEY syntax is incompatible with the hardcoded 
-# settings in metadat_harvest. TODO fix metadata harvest
+#NOTE This is predicated on the set of model families/providers 
+# supported by metadata_harvest()
 async def main(args):
-    os.environ['GEMINI_API_KEY'] = args.api_key
-    #os.environ['LLM_API_KEY']
     noisy_stdout = io.StringIO()
     with contextlib.redirect_stdout(noisy_stdout):
         extracted_metadata = await metadata_harvest(
             model_name=args.model_name,
             url=args.url,
+            api_key=args.api_key,
             metadata_standard=LTER_LIFE_STANDARD,
             dump_format=args.dump_format,
             allow_retrying=string_to_bool(args.allow_retrying),
