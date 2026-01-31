@@ -1,16 +1,25 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from fastapi.security import APIKeyHeader
 from celery.result import AsyncResult
 from llm_metadata_harvester_service.api.schemas import JobRequest, JobStatusResponse
 from llm_metadata_harvester_service.workers.tasks import run_harvester_task
 from llm_metadata_harvester_service.core.celery_app import celery_app
 
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
 router = APIRouter()
 
 @router.post("/", response_model=JobStatusResponse)
-async def submit_job(req: JobRequest):
+async def submit_job(
+    req: JobRequest,
+    api_key: str = Depends(api_key_header),
+):
+    if not api_key:
+        raise HTTPException(status_code=401, detail="Missing API key")  
+    
     task = run_harvester_task.delay(
         model=req.model,
-        api_key=req.api_key.get_secret_value(),
+        api_key=api_key,
         url=req.url,
     )
     return JobStatusResponse(job_id=task.id, status="queued")
