@@ -100,11 +100,13 @@ To run the service users should ensure apptainer is available on their system an
 
  1. Submitting a request can be done as
 ```
-curl -i -X POST http://localhost:8000/jobs/   -H "Content-Type: application/json"   -d '{
+curl -X POST "http://localhost:8000/jobs/" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: UserAPIkeyForModelMustBeSuppliedHere" \
+  -d '{
     "model": "gemini-2.5-flash",
-    "api_key": "UserAPIkeyForModelMustBeSuppliedHere",
     "url": "https://stac.ecodatacube.eu/veg_quercus.robur_anv.eml/collection.json?.language=en"
-  }'
+  }'  
 ```
 which returns
 ```
@@ -117,7 +119,7 @@ which returns
   ```
 3. Pure result can be queried as
    ```
-   curl -s http://localhost:8000/jobs/$JOB_ID
+   curl -s http://localhost:8000/jobs/$JOB_ID/result
    ```
    
   and provides a (nested) JSON return as
