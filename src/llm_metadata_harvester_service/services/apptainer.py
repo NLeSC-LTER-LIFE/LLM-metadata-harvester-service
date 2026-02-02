@@ -46,6 +46,7 @@ def run_apptainer(
         "--cleanenv",
         "--containall",
         "--no-home",
+        "--net",
         METADATA_HARVESTER_IMAGE,
         
         
