@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY pyproject.toml .
-COPY src ./src
+COPY src/llm_metadata_harvester_service ./llm_metadata_harvester_service
 
 RUN pip install --no-cache-dir .
 
