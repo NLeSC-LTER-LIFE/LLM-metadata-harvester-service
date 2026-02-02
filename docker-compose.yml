@@ -29,6 +29,7 @@ services:
       CELERY_RESULT_BACKEND: redis://redis:6379/1
     volumes:
       - /opt/containers:/opt/containers:ro
+      - /etc/apptainer:/etc/apptainer:ro
       - /usr/bin/apptainer:/usr/bin/apptainer
       - /tmp:/tmp
     cap_add:
