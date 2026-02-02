@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    volumes:
+      - /opt/containers:/opt/containers:ro
+      - /usr/bin/apptainer:/usr/bin/apptainer
+      - /tmp:/tmp
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp=unconfined
+    restart: unless-stopped
+
+  worker:
+    build: .
+    command: celery -A llm_metadata_harvester_service.core.celery_app.celery_app worker -l info
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    volumes:
+      - /opt/containers:/opt/containers:ro
+      - /usr/bin/apptainer:/usr/bin/apptainer
+      - /tmp:/tmp
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp=unconfined
+    restart: unless-stopped
+
+
+  redis:
+    image: redis:7-alpine
+    container_name: llm-harvester-redis
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: llm-harvester-nginx
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: unless-stopped
