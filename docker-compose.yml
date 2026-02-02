@@ -31,6 +31,7 @@ services:
       - /opt/containers:/opt/containers:ro
       - /etc/apptainer:/etc/apptainer:ro
       - /usr/bin/apptainer:/usr/bin/apptainer
+      - /usr/libexec/apptainer:/usr/libexec/apptainer:ro
       - /tmp:/tmp
     cap_add:
       - SYS_ADMIN
