@@ -19,7 +19,7 @@ def run_harvester_task(self, *, model: str, url: str, api_key: str):
         with redirect_stdout(stdout_buffer):
             result = asyncio.run(
                 metadata_harvest(
-                    model=model,
+                    model_name=model,
                     url=url,
                     api_key=api_key,
                 )
