@@ -24,10 +24,10 @@ WORKDIR /app
 
 # Copy source code
 COPY pyproject.toml .
-COPY src/llm_metadata_harvester_service ./llm_metadata_harvester_service
+COPY src/llm_metadata_harvester_service ./src/llm_metadata_harvester_service
 
 RUN pip install --no-cache-dir .
 
 EXPOSE 8000
 
-CMD ["gunicorn", "llm_metadata_harvester_service.main:app", "-c", "llm_metadata_harvester_service/gunicorn_conf.py"]
+CMD ["gunicorn", "src.llm_metadata_harvester_service.main:app", "-c", "src/llm_metadata_harvester_service/gunicorn_conf.py"]
