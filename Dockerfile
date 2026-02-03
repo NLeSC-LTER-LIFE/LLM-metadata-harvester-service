@@ -22,7 +22,7 @@ RUN git clone https://github.com/LTER-LIFE/llm-metadata-harvester.git \
 
 RUN playwright install-deps \ 
     && playwright install chromium chromium-headless-shell
-
+    
 WORKDIR /app
 
 # Copy source code
