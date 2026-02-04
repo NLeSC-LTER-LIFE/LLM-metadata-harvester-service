@@ -13,24 +13,20 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# ---- install llm-metadata-harvester from source ----
 WORKDIR /opt
-
 RUN git clone https://github.com/LTER-LIFE/llm-metadata-harvester.git \
     && cd llm-metadata-harvester \
     && pip install --no-cache-dir .
 
-RUN playwright install-deps \ 
+RUN playwright install-deps \
     && playwright install chromium chromium-headless-shell
-    
-WORKDIR /app
 
-# Copy source code
+WORKDIR /app
 COPY pyproject.toml .
+COPY README.md .
 COPY src/llm_metadata_harvester_service ./src/llm_metadata_harvester_service
 
-RUN pip install --no-cache-dir .
+ARG EXTRAS=runtime
+RUN pip install --no-cache-dir ".[${EXTRAS}]"
 
-EXPOSE 8000
-
-CMD ["gunicorn", "src.llm_metadata_harvester_service.main:app", "-c", "src/llm_metadata_harvester_service/gunicorn_conf.py"]
+CMD ["celery", "-A", "llm_metadata_harvester_service.core.celery_app.celery_app", "worker", "-l", "info"]

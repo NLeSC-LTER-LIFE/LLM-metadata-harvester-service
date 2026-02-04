@@ -31,7 +31,7 @@ This repository provides the framework to making LTER-LIFE's LLM based metadata 
 
 User are expected to provide the name of a supported large language model (currrently these are those offered by OpenAI, Google Gemini and SURF (coming soon)), an associated API key, and the url of the metadata to be harvested.
 
-Installation and detals of use are provided below 
+Installation and details of use are provided below 
 <!---
 The repository
 [https://github.com/NLeSC/template](https://github.com/NLeSC/template) contains
@@ -57,16 +57,17 @@ delete
 # Documentation for users
 
 ## Installation
-The service is provided in a fully containerized format and can be deployed using either docker or nerdctl/containerd.
+The service is provided in a fully containerized format and can be deployed using either docker or nerdctl/containerd. Both a production and a development track are available. 
 
 
 To run the service users should follow the steps listed below
 1. Ensure either `Docker` or `nerdctl/containerd` is available on their system.
-   ```bash
+
+  ```bash
    which docker
 
    which nerdctl
-   ```
+  ```
 
    If neither is available please install for your system 
 
@@ -77,17 +78,17 @@ To run the service users should follow the steps listed below
    cd LLM-metadata-harvester-service
    ```
 
-2. Build and start the service as
+2. Build and start the service (production) as
 
    nerdctl
    ```bash
-   sudo nerdctl compose -f nerdctl-compose.yml up --build
+   sudo nerdctl compose -f nerdctl-compose.prod.yml up --build
    ```
    or
 
    docker
    ```bash
-   docker compose -f nerdctl-compose.yml up --build
+   docker compose -f nerdctl-compose.prod.yml up --build
    ```
 
 3. Shutdown
@@ -95,17 +96,17 @@ To run the service users should follow the steps listed below
 
    nerdctl
    ```bash
-   sudo nerdctl compose -f nerdctl-compose.yml down
+   sudo nerdctl compose -f nerdctl-compose.prod.yml down
    ```
    or
 
    docker
    ```bash
-   docker compose -f nerdctl-compose.yml down
+   docker compose -f nerdctl-compose.prod.yml down
    ```
    
 
- ## Usage
+## Usage
 
  Having installed and started the service, it can be queried via its REST API:
 
@@ -152,6 +153,23 @@ which returns
 - _notes on how to install_
 --->
 # Documentation for developers
+In addition to the production service a development track is available. The `src/` is bind mounted into the api and worker containers and a celery watchfile has been set up to allow hot reload of the service if/when source code changes.
+
+After cloning the repository as outlined above, the development service can be started with
+
+nerdctl
+   ```bash
+   sudo nerdctl compose -f nerdctl-compose.dev.yml up --build
+   ```
+   or
+
+   docker
+   ```bash
+   docker compose -f nerdctl-compose.dev.yml up --build
+   ```
+
+  and shut down accordingly.
+
 <!---
 - _notes on how to contribute_
 --->

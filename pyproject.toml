@@ -5,27 +5,49 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "llm_metadata_harvester_service"
 version = "0.1.0"
-description = "Async FastAPI service executing Apptainer-based containerized LTERLife LLM-metadata-harvester tool via Celery"
+description = "Async FastAPI service executing containerized LTERLife LLM-metadata-harvester tool via Celery"
 readme = "README.md"
 requires-python = ">=3.12"
-license = { text = "Apache 2.0" }
+license = { text = "Apache-2.0" }
+
 
 authors = [
   { name = "Meiert Grootes", email = "m.grootes@esciencecenter.nl" }
 ]
 
 dependencies = [
-  "fastapi>=0.110",
-  "uvicorn[standard]>=0.27",
-  "gunicorn>=21.2",
-  "celery>=5.3",
-  "redis>=5.0",
   "pydantic>=2.6",
   "python-dotenv>=1.0",
-  "slowapi>=0.1.9",
 ]
 
 [project.optional-dependencies]
+
+runtime = [
+  "celery>=5.3",
+  "redis>=5.0",
+]
+
+
+api = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.27",
+  "gunicorn>=21.2",
+  "slowapi>=0.1.9",
+]
+
+
+worker = [
+  "celery>=5.3",
+  "redis>=5.0",
+]
+
+# ---- Database support (optional) ----
+postgres = [
+  "sqlalchemy>=2.0",
+  "psycopg2-binary>=2.9",
+]
+
+# ---- Development tooling ----
 dev = [
   "black>=24.1",
   "ruff>=0.3",
@@ -34,22 +56,15 @@ dev = [
   "httpx>=0.26",
 ]
 
-postgres = [
-  "sqlalchemy>=2.0",
-  "psycopg2-binary>=2.9",
-]
-
 [project.urls]
 #Homepage = "https://example.com"
 Repository = "https://github.com/NLeSC-LTER-LIFE/LLM-metadata-harvester-service"
-
 
 [tool.setuptools]
 package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
 
 [tool.black]
 line-length = 88
@@ -64,3 +79,4 @@ ignore = ["E501"]
 python_version = "3.12"
 strict = true
 ignore_missing_imports = true
+
