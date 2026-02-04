@@ -256,6 +256,14 @@ resp.
 docker compose -f nerdctl-compose.public.yml up -d
 ```
 
+### 3. access service
+The public facing server should then be available, e.g., via
+
+```bash
+curl http://<server-ip>/health
+curl -X POST http://<server-ip>/jobs/ ...
+```
+
 # Documentation for maintainers
 <!---
 - _notes on how to make a release_
