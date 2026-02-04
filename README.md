@@ -139,19 +139,21 @@ which returns
   depending on the status of the job
 
 3. Job results can be retrieved using the `job_id` as
-   ```
+   
+   ```bash
    curl -s http://localhost/jobs/$JOB_ID/result
-  ```
+   ```
   and provides a (nested) JSON return as
 
-  ```
-  {"job_id":"1a62b30e-faaa-4641-b1d0-66081c162b2e","status":"success","model":"gemini-2.5-flash","result":{"Metadata date":"N/A;","Metadata language":"English;","Responsible organization metadata":"N/A;","Landing page":"N/A;","Title":"Example Domain;","Description":"For use in documentation examples without needing permission and should be avoided in operations.;","Unique Identifier":"N/A;","Resource type":"Conceptual or example resource;","Keywords":"documentation examples, permission, operations;","Data creator":"N/A;","Data contact point":"N/A;","Data publisher":"N/A;","Spatial coverage":"N/A;","Spatial resolution":"N/A;","Spatial reference system":"N/A;","Temporal coverage":"N/A;","Temporal resolution":"N/A;","License":"Permissive license for use in documentation examples without needing permission;","Access rights":"Allow use in documentation examples without requiring permission;","Distribution access URL":"N/A;","Distribution format":"N/A;","Distribution byte size":"N/A;"},"logs":"Extracting full page text...\nExtracting entities from text...\nConverting extracted nodes to metadata...\n"}
-  ```
+```bash
+  {"job_id":"1a62b30e-faaa-4641-b1d0-66081c162b2e","status":"success","model":"gemini-2.5-flash","result":{"Metadata date":"N/A;","Metadata language":"English;","Responsible     organization metadata":"N/A;","Landing page":"N/A;","Title":"Example Domain;","Description":"For use in documentation examples without needing permission and should be avoided in operations.;","Unique Identifier":"N/A;","Resource type":"Conceptual or example resource;","Keywords":"documentation examples, permission, operations;","Data creator":"N/A;","Data contact point":"N/A;","Data publisher":"N/A;","Spatial coverage":"N/A;","Spatial resolution":"N/A;","Spatial reference system":"N/A;","Temporal coverage":"N/A;","Temporal resolution":"N/A;","License":"Permissive license for use in documentation examples without needing permission;","Access rights":"Allow use in documentation examples without requiring permission;","Distribution access URL":"N/A;","Distribution format":"N/A;","Distribution byte size":"N/A;"},"logs":"Extracting full page text...\nExtracting entities from text...\nConverting extracted nodes to metadata...\n"}
+```
 
 <!---
 - _description of what the software does_
 - _notes on how to install_
 --->
+
 # Documentation for developers
 In addition to the production service a development track is available. The `src/` is bind mounted into the api and worker containers and a celery watchfile has been set up to allow hot reload of the service if/when source code changes.
 
