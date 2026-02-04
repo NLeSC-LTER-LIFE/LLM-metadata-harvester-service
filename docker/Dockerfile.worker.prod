@@ -1,0 +1,32 @@
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    HOME=/tmp
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    curl \
+    git \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt
+RUN git clone https://github.com/LTER-LIFE/llm-metadata-harvester.git \
+    && cd llm-metadata-harvester \
+    && pip install --no-cache-dir .
+
+RUN playwright install-deps \
+    && playwright install chromium chromium-headless-shell
+
+WORKDIR /app
+COPY pyproject.toml .
+COPY README.md .
+COPY src/llm_metadata_harvester_service ./src/llm_metadata_harvester_service
+
+ARG EXTRAS=runtime
+RUN pip install --no-cache-dir ".[${EXTRAS}]"
+
+CMD ["celery", "-A", "llm_metadata_harvester_service.core.celery_app.celery_app", "worker", "-l", "info"]
