@@ -1,0 +1,51 @@
+services:
+  redis:
+    image: redis:7-alpine
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+      args:
+        EXTRAS: "api,runtime,dev"
+    command: >
+      uvicorn llm_metadata_harvester_service.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+    volumes:
+      - ./src:/app/src
+    image: llm-metadata-harvester-service-api:dev
+    environment:
+      PYTHONPATH: /app/src
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    depends_on:
+      - redis
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+      args:
+        EXTRAS: "runtime,dev"
+    command: python -m llm_metadata_harvester_service.workers.watchfiles_celery
+    volumes:
+      - ./src:/app/src
+    image: llm-metadata-harvester-service-worker:dev
+    environment:
+      PYTHONPATH: /app/src
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    depends_on:
+      - redis
+
+  nginx:
+    image: nginx:1.25-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+    
