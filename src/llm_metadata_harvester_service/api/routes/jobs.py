@@ -21,7 +21,19 @@ router = APIRouter(prefix="/jobs", tags=["jobs"])
 async def submit_job(
     payload: JobSubmitRequest,
     x_api_key: str = Header(..., alias="X-API-Key"),
+    x_webhook_secret: Optional[str] = Header(
+        None, alias="X-Webhook-Secret"
+    ),
 ):
+    """
+    prevent insecure webhook registration
+    """
+    if payload.callback_url and not x_webhook_secret:
+        raise HTTPEception(
+            status_code=400,
+            detal="X-Webhook-Secret required when callback_url is provided",
+        )
+
     """
     Submit a metadata harvesting job.
     """
@@ -29,6 +41,8 @@ async def submit_job(
         model=payload.model,
         url=payload.url,
         api_key=x_api_key,
+        callback_url= payload.callback_url,
+        webhook_secret=x_webhook_secret,
     )
 
     return JobSubmitResponse(
